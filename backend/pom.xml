@@ -33,6 +33,12 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- PostgreSQL Driver for Neon Database -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <!-- Cloudinary Java SDK for Server-Side Secure Image Upload -->
         <dependency>
             <groupId>com.cloudinary</groupId>
