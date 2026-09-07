@@ -13,7 +13,7 @@ public class HeroSlide {
     private String title;
     private String subtitle;
     
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
     
     private String buttonText;

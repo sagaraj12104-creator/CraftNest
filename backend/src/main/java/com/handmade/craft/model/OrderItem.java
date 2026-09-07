@@ -13,7 +13,7 @@ public class OrderItem {
     private Long productId;
     private String productName;
     
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String productImageUrl;
     
     private Double price;

@@ -17,7 +17,7 @@ public class Product {
 
     private Double price;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
     private String category;
