@@ -1,10 +1,12 @@
 package com.handmade.craft.config;
 
+import com.handmade.craft.model.Category;
 import com.handmade.craft.model.HeroSlide;
 import com.handmade.craft.model.Order;
 import com.handmade.craft.model.OrderItem;
 import com.handmade.craft.model.Product;
 import com.handmade.craft.model.User;
+import com.handmade.craft.repository.CategoryRepository;
 import com.handmade.craft.repository.HeroSlideRepository;
 import com.handmade.craft.repository.OrderRepository;
 import com.handmade.craft.repository.ProductRepository;
@@ -31,8 +33,14 @@ public class DataSeeder implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
     public void run(String... args) throws Exception {
+        if (categoryRepository.count() == 0) {
+            seedCategories();
+        }
         if (userRepository.count() == 0) {
             seedUsers();
         }
@@ -45,6 +53,14 @@ public class DataSeeder implements CommandLineRunner {
         if (orderRepository.count() == 0) {
             seedOrders();
         }
+    }
+
+    private void seedCategories() {
+        categoryRepository.save(new Category("Ceramics", "Handcrafted pottery, clay tableware, and ceramic artifacts", "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=800&q=80"));
+        categoryRepository.save(new Category("Textiles", "100% natural organic cotton shawls, tapestries & weaves", "https://images.unsplash.com/photo-1606744824163-985d376605aa?auto=format&fit=crop&w=800&q=80"));
+        categoryRepository.save(new Category("Woodwork", "Hand-carved wooden tableware, sculptures & heritage bowls", "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=800&q=80"));
+        categoryRepository.save(new Category("Leather Craft", "Full-grain vintage leather journals & accessories", "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80"));
+        categoryRepository.save(new Category("Home Decor", "Hand-hammered brass, wall art & bohemian interior pieces", "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=800&q=80"));
     }
 
     private void seedUsers() {

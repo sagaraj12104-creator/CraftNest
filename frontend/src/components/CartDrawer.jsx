@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Trash2, Plus, Minus, ArrowRight, CheckCircle2, ShoppingBag } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { api } from '../services/api';
@@ -14,17 +14,27 @@ export const CartDrawer = () => {
     setIsCartOpen,
     setActiveTab,
     customerEmail,
-    setCustomerEmail
+    setCustomerEmail,
+    user
   } = useShop();
 
   const [isCheckout, setIsCheckout] = useState(false);
   const [formData, setFormData] = useState({
-    name: 'Priya Sharma',
-    email: customerEmail,
-    phone: '+91 98765 43210',
-    address: '42 Heritage Park Road, Indiranagar, Bengaluru, KA 560038'
+    name: '',
+    email: '',
+    phone: '',
+    address: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setFormData({
+      name: user?.name || '',
+      email: user?.email || customerEmail || '',
+      phone: user?.phone || '',
+      address: user?.address || ''
+    });
+  }, [user, customerEmail, isCheckout]);
 
   if (!isCartOpen) return null;
 
@@ -48,8 +58,10 @@ export const CartDrawer = () => {
         }))
       };
 
-      const createdOrder = await api.createOrder(orderPayload);
-      setCustomerEmail(formData.email);
+      await api.createOrder(orderPayload);
+      if (formData.email) {
+        setCustomerEmail(formData.email);
+      }
       clearCart();
       setIsCheckout(false);
       setIsCartOpen(false);
@@ -111,7 +123,7 @@ export const CartDrawer = () => {
                   <div>
                     <h4 className="font-serif font-bold text-xs text-[#2A1B17] line-clamp-1">{product.name}</h4>
                     <p className="text-[11px] text-[#8C7A70]">{product.category}</p>
-                    <p className="text-xs font-bold text-[#C86D51] mt-0.5">${product.price.toFixed(2)}</p>
+                    <p className="text-xs font-bold text-[#C86D51] mt-0.5">₹{product.price.toFixed(2)}</p>
                   </div>
 
                   <div className="flex items-center justify-between mt-2">
@@ -150,6 +162,7 @@ export const CartDrawer = () => {
                 <input
                   type="text"
                   required
+                  placeholder="Your Full Name"
                   value={formData.name}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-3 py-2 text-xs border border-[#E8DFD8] rounded-xl focus:ring-2 focus:ring-[#C86D51] outline-none"
@@ -161,6 +174,7 @@ export const CartDrawer = () => {
                 <input
                   type="email"
                   required
+                  placeholder="your.email@example.com"
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
                   className="w-full px-3 py-2 text-xs border border-[#E8DFD8] rounded-xl focus:ring-2 focus:ring-[#C86D51] outline-none"
@@ -172,6 +186,7 @@ export const CartDrawer = () => {
                 <input
                   type="tel"
                   required
+                  placeholder="+91 98765 43210"
                   value={formData.phone}
                   onChange={e => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full px-3 py-2 text-xs border border-[#E8DFD8] rounded-xl focus:ring-2 focus:ring-[#C86D51] outline-none"
@@ -183,6 +198,7 @@ export const CartDrawer = () => {
                 <textarea
                   required
                   rows={3}
+                  placeholder="Enter complete shipping address"
                   value={formData.address}
                   onChange={e => setFormData({ ...formData, address: e.target.value })}
                   className="w-full px-3 py-2 text-xs border border-[#E8DFD8] rounded-xl focus:ring-2 focus:ring-[#C86D51] outline-none"
@@ -192,7 +208,7 @@ export const CartDrawer = () => {
               <div className="p-3 bg-[#F7F4EF] rounded-xl text-xs space-y-1">
                 <div className="flex justify-between text-[#8C7A70]">
                   <span>Subtotal</span>
-                  <span>${cartTotal.toFixed(2)}</span>
+                  <span>₹{cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-[#8C7A70]">
                   <span>Shipping</span>
@@ -200,7 +216,7 @@ export const CartDrawer = () => {
                 </div>
                 <div className="flex justify-between text-[#2A1B17] font-bold pt-1 border-t border-[#E8DFD8]">
                   <span>Total Amount</span>
-                  <span>${cartTotal.toFixed(2)}</span>
+                  <span>₹{cartTotal.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -221,7 +237,7 @@ export const CartDrawer = () => {
           <div className="p-4 border-t border-[#E8DFD8] bg-white space-y-3">
             <div className="flex justify-between items-center text-sm font-bold text-[#2A1B17]">
               <span>Total</span>
-              <span className="text-lg text-[#C86D51]">${cartTotal.toFixed(2)}</span>
+              <span className="text-lg text-[#C86D51]">₹{cartTotal.toFixed(2)}</span>
             </div>
 
             <button

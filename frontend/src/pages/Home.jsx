@@ -8,15 +8,14 @@ import { useShop } from '../context/ShopContext';
 export const Home = () => {
   const [newArrivals, setNewArrivals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { setActiveTab } = useShop();
-
-  const categories = [
+  const [categories, setCategories] = useState([
     { name: 'Ceramics', icon: '🏺', color: 'bg-[#F5EBE6]' },
     { name: 'Textiles', icon: '🧵', color: 'bg-[#EBF2F5]' },
     { name: 'Woodwork', icon: '🪵', color: 'bg-[#F5F0E6]' },
     { name: 'Leather', icon: '💼', color: 'bg-[#F2EBEB]' },
     { name: 'Home Decor', icon: '🕯️', color: 'bg-[#EFEFF5]' }
-  ];
+  ]);
+  const { setActiveTab } = useShop();
 
   const defaultProducts = [
     {
@@ -70,17 +69,31 @@ export const Home = () => {
   ];
 
   useEffect(() => {
-    loadNewArrivals();
+    loadHomeData();
   }, []);
 
-  const loadNewArrivals = async () => {
+  const loadHomeData = async () => {
     try {
       setLoading(true);
-      const data = await api.getNewArrivals();
-      if (data && data.length > 0) {
-        setNewArrivals(data);
+      const [arrivalsData, catData] = await Promise.all([
+        api.getNewArrivals(),
+        api.getCategories()
+      ]);
+
+      if (arrivalsData && arrivalsData.length > 0) {
+        setNewArrivals(arrivalsData);
       } else {
         setNewArrivals(defaultProducts);
+      }
+
+      if (catData && catData.length > 0) {
+        const bgColors = ['bg-[#F5EBE6]', 'bg-[#EBF2F5]', 'bg-[#F5F0E6]', 'bg-[#F2EBEB]', 'bg-[#EFEFF5]'];
+        const icons = ['🏺', '🧵', '🪵', '💼', '🕯️', '✨'];
+        setCategories(catData.map((c, i) => ({
+          name: c.name,
+          icon: icons[i % icons.length],
+          color: bgColors[i % bgColors.length]
+        })));
       }
     } catch (err) {
       setNewArrivals(defaultProducts);

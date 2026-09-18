@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Plus, Edit, Trash2, Image, Package, ShoppingBag, CheckCircle, RefreshCw, X } from 'lucide-react';
+import { ShieldCheck, Plus, Edit, Trash2, Image, Package, ShoppingBag, Layers, RefreshCw, X } from 'lucide-react';
 import { api } from '../services/api';
 import { ImageUpload } from '../components/ImageUpload';
 
 export const AdminPage = () => {
-  const [activeAdminTab, setActiveAdminTab] = useState('products'); // 'products', 'slides', 'orders'
+  const [activeAdminTab, setActiveAdminTab] = useState('products'); // 'products', 'categories', 'slides', 'orders'
 
   // Data states
   const [products, setProducts] = useState([]);
   const [slides, setSlides] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Modals & Form States
@@ -26,6 +27,14 @@ export const AdminPage = () => {
     artistName: '',
     isNewArrival: true,
     featured: true
+  });
+
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [categoryForm, setCategoryForm] = useState({
+    name: '',
+    description: '',
+    imageUrl: ''
   });
 
   const [showSlideModal, setShowSlideModal] = useState(false);
@@ -47,14 +56,16 @@ export const AdminPage = () => {
   const loadAllAdminData = async () => {
     setLoading(true);
     try {
-      const [prodData, slideData, orderData] = await Promise.all([
+      const [prodData, slideData, orderData, catData] = await Promise.all([
         api.getProducts(),
         api.getAdminSlides(),
-        api.getOrders()
+        api.getOrders(),
+        api.getCategories()
       ]);
       setProducts(prodData);
       setSlides(slideData);
       setOrders(orderData);
+      setCategories(catData);
     } catch (err) {
       console.error(err);
     } finally {
@@ -70,7 +81,7 @@ export const AdminPage = () => {
       description: '',
       price: '',
       imageUrl: '',
-      category: 'Ceramics',
+      category: categories.length > 0 ? categories[0].name : 'Ceramics',
       material: 'Clay',
       stock: 10,
       artistName: '',
@@ -122,6 +133,53 @@ export const AdminPage = () => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       await api.deleteProduct(id);
       loadAllAdminData();
+    }
+  };
+
+  // --- CATEGORY CRUD HANDLERS ---
+  const handleOpenAddCategory = () => {
+    setEditingCategory(null);
+    setCategoryForm({
+      name: '',
+      description: '',
+      imageUrl: ''
+    });
+    setShowCategoryModal(true);
+  };
+
+  const handleOpenEditCategory = (cat) => {
+    setEditingCategory(cat);
+    setCategoryForm({
+      name: cat.name,
+      description: cat.description || '',
+      imageUrl: cat.imageUrl || ''
+    });
+    setShowCategoryModal(true);
+  };
+
+  const handleSaveCategory = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingCategory) {
+        await api.updateCategory(editingCategory.id, categoryForm);
+      } else {
+        await api.createCategory(categoryForm);
+      }
+      setShowCategoryModal(false);
+      loadAllAdminData();
+    } catch (err) {
+      alert(err.message || 'Error saving category');
+    }
+  };
+
+  const handleDeleteCategory = async (id) => {
+    if (window.confirm('Are you sure you want to delete this category?')) {
+      try {
+        await api.deleteCategory(id);
+        loadAllAdminData();
+      } catch (err) {
+        alert('Error deleting category');
+      }
     }
   };
 
@@ -196,7 +254,7 @@ export const AdminPage = () => {
           </div>
           <div>
             <h2 className="text-xl font-serif font-bold">Admin Control Panel</h2>
-            <p className="text-xs md:text-sm text-[#D7CCC8]">Products, Home Hero Slides & Customer Orders Management</p>
+            <p className="text-xs md:text-sm text-[#D7CCC8]">Products, Categories, Home Hero Slides & Orders Management</p>
           </div>
         </div>
 
@@ -210,10 +268,10 @@ export const AdminPage = () => {
       </div>
 
       {/* Admin Tab Selectors */}
-      <div className="flex bg-white p-1.5 rounded-2xl border border-[#E8DFD8] shadow-xs max-w-xl">
+      <div className="flex bg-white p-1.5 rounded-2xl border border-[#E8DFD8] shadow-xs max-w-2xl overflow-x-auto">
         <button
           onClick={() => setActiveAdminTab('products')}
-          className={`flex-1 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap ${
             activeAdminTab === 'products'
               ? 'bg-[#2A1B17] text-white shadow-xs'
               : 'text-[#543831] hover:bg-[#F7F4EF]'
@@ -224,8 +282,20 @@ export const AdminPage = () => {
         </button>
 
         <button
+          onClick={() => setActiveAdminTab('categories')}
+          className={`flex-1 py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap ${
+            activeAdminTab === 'categories'
+              ? 'bg-[#2A1B17] text-white shadow-xs'
+              : 'text-[#543831] hover:bg-[#F7F4EF]'
+          }`}
+        >
+          <Layers className="w-4 h-4" />
+          <span>Categories ({categories.length})</span>
+        </button>
+
+        <button
           onClick={() => setActiveAdminTab('slides')}
-          className={`flex-1 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap ${
             activeAdminTab === 'slides'
               ? 'bg-[#2A1B17] text-white shadow-xs'
               : 'text-[#543831] hover:bg-[#F7F4EF]'
@@ -237,7 +307,7 @@ export const AdminPage = () => {
 
         <button
           onClick={() => setActiveAdminTab('orders')}
-          className={`flex-1 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap ${
             activeAdminTab === 'orders'
               ? 'bg-[#2A1B17] text-white shadow-xs'
               : 'text-[#543831] hover:bg-[#F7F4EF]'
@@ -273,7 +343,7 @@ export const AdminPage = () => {
                 <div className="flex-1 min-w-0">
                   <h4 className="text-xs md:text-sm font-bold text-[#2A1B17] truncate">{p.name}</h4>
                   <p className="text-[11px] text-[#8C7A70]">{p.category} • Stock: {p.stock}</p>
-                  <p className="text-xs font-bold text-[#C86D51] mt-0.5">${p.price.toFixed(2)}</p>
+                  <p className="text-xs font-bold text-[#C86D51] mt-0.5">₹{p.price?.toFixed(2)}</p>
                 </div>
 
                 <div className="flex items-center gap-1">
@@ -298,7 +368,61 @@ export const AdminPage = () => {
         </div>
       )}
 
-      {/* --- TAB 2: HERO SLIDES MANAGEMENT --- */}
+      {/* --- TAB 2: CATEGORIES MANAGEMENT --- */}
+      {activeAdminTab === 'categories' && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center px-1">
+            <div>
+              <h3 className="text-base font-bold text-[#2A1B17] font-serif">Category Management</h3>
+              <p className="text-xs text-[#8C7A70]">Add, edit, or delete craft product categories</p>
+            </div>
+            <button
+              onClick={handleOpenAddCategory}
+              className="flex items-center gap-2 px-4 py-2.5 bg-[#C86D51] text-white text-xs font-bold rounded-xl shadow hover:bg-[#b05c42] transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Category</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {categories.map((cat) => (
+              <div key={cat.id} className="bg-white p-4 rounded-2xl border border-[#E8DFD8] flex items-center justify-between gap-4 shadow-xs">
+                {cat.imageUrl ? (
+                  <img src={cat.imageUrl} alt={cat.name} className="w-14 h-14 object-cover rounded-xl bg-[#F7F4EF]" />
+                ) : (
+                  <div className="w-14 h-14 bg-[#F7F4EF] rounded-xl flex items-center justify-center text-[#C86D51]">
+                    <Layers className="w-6 h-6" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-xs md:text-sm font-bold text-[#2A1B17] truncate">{cat.name}</h4>
+                  <p className="text-[11px] text-[#8C7A70] line-clamp-1">{cat.description || 'Craft category'}</p>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => handleOpenEditCategory(cat)}
+                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl"
+                    title="Edit"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteCategory(cat.id)}
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-xl"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* --- TAB 3: HERO SLIDES MANAGEMENT --- */}
       {activeAdminTab === 'slides' && (
         <div className="space-y-4">
           <div className="flex justify-between items-center px-1">
@@ -352,7 +476,7 @@ export const AdminPage = () => {
         </div>
       )}
 
-      {/* --- TAB 3: CUSTOMER ORDERS MANAGEMENT --- */}
+      {/* --- TAB 4: CUSTOMER ORDERS MANAGEMENT --- */}
       {activeAdminTab === 'orders' && (
         <div className="space-y-4">
           <h3 className="text-base font-bold text-[#2A1B17] font-serif px-1">Customer Orders Management</h3>
@@ -387,7 +511,7 @@ export const AdminPage = () => {
 
                 <div className="flex justify-between items-center pt-2 border-t border-[#F3EDE6] text-xs">
                   <span className="text-[#8C7A70]">{o.items?.length || 0} items purchased</span>
-                  <span className="font-bold text-[#C86D51] text-sm">${o.totalAmount?.toFixed(2)}</span>
+                  <span className="font-bold text-[#C86D51] text-sm">₹{o.totalAmount?.toFixed(2)}</span>
                 </div>
               </div>
             ))}
@@ -433,7 +557,7 @@ export const AdminPage = () => {
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-[#543831] mb-1">Price ($)</label>
+                  <label className="block text-xs font-semibold text-[#543831] mb-1">Price (₹)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -471,11 +595,20 @@ export const AdminPage = () => {
                     onChange={e => setProductForm({ ...productForm, category: e.target.value })}
                     className="w-full px-3 py-2 text-xs border border-[#E8DFD8] rounded-xl outline-none bg-white"
                   >
-                    <option value="Ceramics">Ceramics</option>
-                    <option value="Textiles">Textiles</option>
-                    <option value="Woodwork">Woodwork</option>
-                    <option value="Leather Craft">Leather Craft</option>
-                    <option value="Home Decor">Home Decor</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id || cat.name} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                    {categories.length === 0 && (
+                      <>
+                        <option value="Ceramics">Ceramics</option>
+                        <option value="Textiles">Textiles</option>
+                        <option value="Woodwork">Woodwork</option>
+                        <option value="Leather Craft">Leather Craft</option>
+                        <option value="Home Decor">Home Decor</option>
+                      </>
+                    )}
                   </select>
                 </div>
 
@@ -507,6 +640,60 @@ export const AdminPage = () => {
                 className="w-full py-2.5 bg-[#2A1B17] text-white text-xs font-bold rounded-xl shadow hover:bg-[#543831] transition-colors"
               >
                 Save Product
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* CATEGORY MODAL WITH IMAGE UPLOADER */}
+      {showCategoryModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 animate-fade-in border border-[#E8DFD8]">
+            <div className="flex justify-between items-center pb-2 border-b border-[#F3EDE6]">
+              <h3 className="font-serif font-bold text-base text-[#2A1B17]">
+                {editingCategory ? 'Edit Category' : 'Add New Category'}
+              </h3>
+              <button onClick={() => setShowCategoryModal(false)} className="text-gray-400">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveCategory} className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-[#543831] mb-1">Category Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Terracotta, Brass, Jewelry"
+                  value={categoryForm.name}
+                  onChange={e => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                  className="w-full px-3 py-2 text-xs border border-[#E8DFD8] rounded-xl outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#543831] mb-1">Description</label>
+                <textarea
+                  rows={2}
+                  placeholder="Short description of this craft category"
+                  value={categoryForm.description}
+                  onChange={e => setCategoryForm({ ...categoryForm, description: e.target.value })}
+                  className="w-full px-3 py-2 text-xs border border-[#E8DFD8] rounded-xl outline-none"
+                />
+              </div>
+
+              <ImageUpload
+                label="Category Cover Photo"
+                value={categoryForm.imageUrl}
+                onChange={url => setCategoryForm({ ...categoryForm, imageUrl: url })}
+              />
+
+              <button
+                type="submit"
+                className="w-full py-2.5 bg-[#2A1B17] text-white text-xs font-bold rounded-xl shadow hover:bg-[#543831] transition-colors"
+              >
+                Save Category
               </button>
             </form>
           </div>

@@ -68,7 +68,7 @@ export const WishlistDrawer = () => {
                 <div className="flex-1 min-w-0">
                   <h4 className="font-serif font-bold text-xs text-[#2A1B17] truncate">{product.name}</h4>
                   <p className="text-[11px] text-[#8C7A70]">{product.category}</p>
-                  <p className="text-xs font-bold text-[#C86D51] mt-0.5">${product.price.toFixed(2)}</p>
+                  <p className="text-xs font-bold text-[#C86D51] mt-0.5">₹{product.price.toFixed(2)}</p>
                 </div>
 
                 <div className="flex flex-col gap-2 items-end">

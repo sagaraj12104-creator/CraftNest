@@ -179,5 +179,48 @@ export const api = {
     });
     if (!res.ok) throw new Error('Failed to update order status');
     return await res.json();
+  },
+
+  // Categories API
+  getCategories: async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/categories`);
+      if (!res.ok) throw new Error('Failed to fetch categories');
+      return await res.json();
+    } catch (err) {
+      console.warn('API connection offline for categories:', err);
+      return [];
+    }
+  },
+
+  createCategory: async (categoryData) => {
+    const res = await fetch(`${API_BASE_URL}/categories`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(categoryData)
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText || 'Failed to create category');
+    }
+    return await res.json();
+  },
+
+  updateCategory: async (id, categoryData) => {
+    const res = await fetch(`${API_BASE_URL}/categories/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(categoryData)
+    });
+    if (!res.ok) throw new Error('Failed to update category');
+    return await res.json();
+  },
+
+  deleteCategory: async (id) => {
+    const res = await fetch(`${API_BASE_URL}/categories/${id}`, {
+      method: 'DELETE'
+    });
+    if (!res.ok) throw new Error('Failed to delete category');
+    return true;
   }
 };

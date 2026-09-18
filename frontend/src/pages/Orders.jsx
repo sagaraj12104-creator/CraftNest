@@ -8,36 +8,6 @@ export const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const sampleOrders = [
-    {
-      id: 1,
-      orderNumber: "HMC-78A921F0",
-      customerName: "Priya Sharma",
-      email: "priya@example.com",
-      phone: "+91 98765 43210",
-      shippingAddress: "42 Heritage Park Road, Indiranagar, Bengaluru, KA 560038",
-      totalAmount: 83.50,
-      status: "SHIPPED",
-      createdAt: "2026-09-06T14:30:00",
-      items: [
-        {
-          id: 1,
-          productName: "Rustic Ceramic Clay Teapot Set",
-          productImageUrl: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=800&q=80",
-          price: 48.50,
-          quantity: 1
-        },
-        {
-          id: 2,
-          productName: "Hand-Carved Walnut Wooden Bowl",
-          productImageUrl: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=800&q=80",
-          price: 35.00,
-          quantity: 1
-        }
-      ]
-    }
-  ];
-
   useEffect(() => {
     loadOrders();
   }, [customerEmail]);
@@ -45,14 +15,14 @@ export const Orders = () => {
   const loadOrders = async () => {
     try {
       setLoading(true);
-      const data = await api.getOrders(customerEmail);
-      if (data && data.length > 0) {
-        setOrders(data);
-      } else {
-        setOrders(sampleOrders);
+      if (!customerEmail) {
+        setOrders([]);
+        return;
       }
+      const data = await api.getOrders(customerEmail);
+      setOrders(data || []);
     } catch (err) {
-      setOrders(sampleOrders);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
@@ -161,10 +131,10 @@ export const Orders = () => {
                         />
                         <div className="flex-1 min-w-0">
                           <h4 className="text-xs font-bold text-[#2A1B17] truncate">{item.productName}</h4>
-                          <p className="text-[11px] text-[#8C7A70]">Qty: {item.quantity} × ${item.price?.toFixed(2)}</p>
+                          <p className="text-[11px] text-[#8C7A70]">Qty: {item.quantity} × ₹{item.price?.toFixed(2)}</p>
                         </div>
                         <span className="text-xs font-bold text-[#2A1B17]">
-                          ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                          ₹{((item.price || 0) * (item.quantity || 1)).toFixed(2)}
                         </span>
                       </div>
                     ))}
@@ -180,7 +150,7 @@ export const Orders = () => {
 
                   <div className="text-right">
                     <span className="text-xs text-[#8C7A70] block">Total Amount Paid</span>
-                    <span className="text-base font-bold text-[#C86D51]">${order.totalAmount?.toFixed(2)}</span>
+                    <span className="text-base font-bold text-[#C86D51]">₹{order.totalAmount?.toFixed(2)}</span>
                   </div>
                 </div>
               </div>

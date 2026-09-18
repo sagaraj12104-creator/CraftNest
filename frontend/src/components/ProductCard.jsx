@@ -82,7 +82,7 @@ export const ProductCard = ({ product }) => {
           <div>
             <span className="text-[10px] text-[#8C7A70] block">Price</span>
             <p className="text-sm sm:text-base font-bold text-[#2A1B17]">
-              ${product.price.toFixed(2)}
+              ₹{product.price.toFixed(2)}
             </p>
           </div>
 

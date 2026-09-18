@@ -7,16 +7,34 @@ export const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   
+  // Dynamic Categories from API
+  const [categories, setCategories] = useState(['All']);
+  const materials = ['All', 'Clay', 'Cotton', 'Wood', 'Leather', 'Brass'];
+
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedMaterial, setSelectedMaterial] = useState('All');
-  const [maxPrice, setMaxPrice] = useState(100);
+  const [maxPrice, setMaxPrice] = useState(5000);
   const [sortBy, setSortBy] = useState('featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const categories = ['All', 'Ceramics', 'Textiles', 'Woodwork', 'Leather Craft', 'Home Decor'];
-  const materials = ['All', 'Clay', 'Cotton', 'Wood', 'Leather', 'Brass'];
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const loadCategories = async () => {
+    try {
+      const data = await api.getCategories();
+      if (data && data.length > 0) {
+        setCategories(['All', ...data.map(c => c.name)]);
+      } else {
+        setCategories(['All', 'Ceramics', 'Textiles', 'Woodwork', 'Leather Craft', 'Home Decor']);
+      }
+    } catch (err) {
+      setCategories(['All', 'Ceramics', 'Textiles', 'Woodwork', 'Leather Craft', 'Home Decor']);
+    }
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -50,7 +68,7 @@ export const Shop = () => {
     setSearchQuery('');
     setSelectedCategory('All');
     setSelectedMaterial('All');
-    setMaxPrice(100);
+    setMaxPrice(5000);
     setSortBy('featured');
   };
 
@@ -161,13 +179,13 @@ export const Shop = () => {
             <div>
               <div className="flex justify-between text-xs font-bold text-[#543831] mb-2">
                 <span>Max Price</span>
-                <span className="text-[#C86D51]">${maxPrice}</span>
+                <span className="text-[#C86D51]">₹{maxPrice}</span>
               </div>
               <input
                 type="range"
-                min="10"
-                max="150"
-                step="5"
+                min="100"
+                max="10000"
+                step="100"
                 value={maxPrice}
                 onChange={e => setMaxPrice(Number(e.target.value))}
                 className="w-full accent-[#C86D51]"
