@@ -30,16 +30,16 @@ export const Header = () => {
         {/* Brand Logo */}
         <div 
           onClick={() => setActiveTab('home')}
-          className="flex items-center gap-2.5 cursor-pointer group"
+          className="flex items-center gap-1.5 sm:gap-2.5 cursor-pointer group shrink-0"
         >
-          <div className="w-10 h-10 rounded-2xl bg-[#2A1B17] text-[#E0A96D] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-            <Sparkles className="w-5 h-5 fill-current" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-[#2A1B17] text-[#E0A96D] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform shrink-0">
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-[#2A1B17] tracking-tight leading-none font-serif">
+          <div className="hidden min-[375px]:block">
+            <h1 className="text-sm min-[400px]:text-base sm:text-xl font-bold text-[#2A1B17] tracking-tight leading-none font-serif">
               Handmade<span className="text-[#C86D51]">Craft</span>
             </h1>
-            <p className="text-[10px] text-[#8C7A70] uppercase font-semibold tracking-wider">Artisanal Studio</p>
+            <p className="hidden sm:block text-[10px] text-[#8C7A70] uppercase font-semibold tracking-wider mt-0.5">Artisanal Studio</p>
           </div>
         </div>
 
@@ -86,24 +86,24 @@ export const Header = () => {
         </nav>
 
         {/* Right Action Icons (Wishlist, Cart, Login/Profile) */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1 sm:gap-3 shrink-0">
           <button
             onClick={() => setActiveTab('shop')}
-            className="p-2 rounded-full text-[#543831] hover:bg-[#F3EDE6] transition-colors"
+            className="p-1.5 sm:p-2 rounded-full text-[#543831] hover:bg-[#F3EDE6] transition-colors"
             title="Search Products"
           >
-            <Search className="w-5 h-5" />
+            <Search className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
           {/* Wishlist Button (Requires Auth) */}
           <button
             onClick={() => requireAuth(() => setIsWishlistOpen(true))}
-            className="relative p-2.5 rounded-full bg-white border border-[#E8DFD8] text-[#543831] hover:bg-[#F3EDE6] transition-colors shadow-xs"
+            className="relative p-1.5 sm:p-2.5 rounded-full bg-white border border-[#E8DFD8] text-[#543831] hover:bg-[#F3EDE6] transition-colors shadow-xs"
             title="Wishlist"
           >
-            <Heart className="w-5 h-5" />
+            <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
             {wishlist.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#C86D51] text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-xs">
+              <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-[#C86D51] text-white text-[9px] sm:text-[11px] font-bold rounded-full flex items-center justify-center shadow-xs">
                 {wishlist.length}
               </span>
             )}
@@ -112,13 +112,13 @@ export const Header = () => {
           {/* Cart Button (Requires Auth) */}
           <button
             onClick={() => requireAuth(() => setIsCartOpen(true))}
-            className="relative p-2.5 rounded-full bg-[#2A1B17] text-[#E0A96D] hover:bg-[#3D2924] transition-colors shadow-md flex items-center gap-2 px-4"
+            className="relative p-1.5 sm:p-2.5 rounded-full bg-[#2A1B17] text-[#E0A96D] hover:bg-[#3D2924] transition-colors shadow-md flex items-center gap-1 sm:gap-2 px-2 sm:px-4"
             title="Cart"
           >
-            <ShoppingBag className="w-5 h-5" />
+            <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="hidden sm:inline text-xs font-bold text-white">Cart</span>
             {cartItemCount > 0 && (
-              <span className="w-5 h-5 bg-[#C86D51] text-white text-[11px] font-bold rounded-full flex items-center justify-center">
+              <span className="w-4 h-4 sm:w-5 sm:h-5 bg-[#C86D51] text-white text-[9px] sm:text-[11px] font-bold rounded-full flex items-center justify-center">
                 {cartItemCount}
               </span>
             )}
@@ -138,10 +138,10 @@ export const Header = () => {
           ) : (
             <button
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 bg-[#C86D51] hover:bg-[#b05c42] text-white text-xs font-bold rounded-xl shadow-xs transition-transform active:scale-95"
+              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-4 py-1.5 sm:py-2 bg-[#C86D51] hover:bg-[#b05c42] text-white text-[10px] sm:text-xs font-bold rounded-lg sm:rounded-xl shadow-xs transition-transform active:scale-95"
             >
               <LogIn className="w-3.5 h-3.5" />
-              <span>Login</span>
+              <span className="hidden min-[400px]:inline">Login</span>
             </button>
           )}
         </div>

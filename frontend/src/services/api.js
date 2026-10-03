@@ -1,4 +1,12 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const getApiBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== 'undefined') {
+    return `http://${window.location.hostname}:10000/api`;
+  }
+  return 'http://localhost:10000/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const api = {
   // Method 2 Secure File Upload API (Sends photo file to Java Spring Boot Backend)

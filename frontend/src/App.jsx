@@ -11,6 +11,8 @@ import { Orders } from './pages/Orders';
 import { Account } from './pages/Account';
 import { AdminPage } from './pages/AdminPage';
 
+import { Footer } from './components/Footer';
+
 const MainContent = () => {
   const { activeTab } = useShop();
 
@@ -27,11 +29,12 @@ const MainContent = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex flex-col justify-between">
-      <div>
+      <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 w-full">
           {renderTabContent()}
         </main>
+        <Footer />
       </div>
 
       <CartDrawer />

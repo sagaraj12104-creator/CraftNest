@@ -16,6 +16,7 @@ public class Category {
     @Column(length = 1000)
     private String description;
 
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
     public Category() {}
