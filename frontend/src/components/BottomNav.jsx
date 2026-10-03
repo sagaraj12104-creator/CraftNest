@@ -21,8 +21,8 @@ export const BottomNav = () => {
   };
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-md md:hidden">
-      <nav className="bg-[#2A1B17] text-[#EFEBE9] rounded-full p-2 shadow-2xl border border-[#4A322C] flex items-center justify-around backdrop-blur-md bg-opacity-95">
+    <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-4 md:hidden pointer-events-none">
+      <nav className="bg-[#2A1B17] text-[#EFEBE9] rounded-full p-1.5 shadow-2xl border border-[#4A322C] inline-flex items-center justify-center gap-0.5 sm:gap-1 backdrop-blur-md bg-opacity-95 pointer-events-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -31,7 +31,7 @@ export const BottomNav = () => {
             <button
               key={item.id}
               onClick={() => handleTabClick(item)}
-              className={`relative flex items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-300 ${
+              className={`relative flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full transition-all duration-300 ${
                 isActive
                   ? 'bg-[#543831] text-white shadow-md font-medium scale-105'
                   : 'text-[#D7CCC8] hover:text-white hover:bg-[#3D2924]'

@@ -127,10 +127,10 @@ export const Home = () => {
             <button
               key={idx}
               onClick={() => setActiveTab('shop')}
-              className={`${cat.color} border border-[#E8DFD8] flex items-center gap-3 px-5 py-3 rounded-2xl shrink-0 shadow-xs hover:shadow-md transition-all active:scale-95 text-left snap-center`}
+              className={`${cat.color} border border-[#E8DFD8] flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl shrink-0 shadow-xs hover:shadow-md transition-all active:scale-95 text-left snap-center`}
             >
-              <span className="text-xl">{cat.icon}</span>
-              <span className="text-sm font-bold text-[#2A1B17] whitespace-nowrap">{cat.name}</span>
+              <span className="text-base sm:text-lg">{cat.icon}</span>
+              <span className="text-xs sm:text-sm font-bold text-[#2A1B17] whitespace-nowrap">{cat.name}</span>
             </button>
           ))}
         </div>
@@ -174,48 +174,6 @@ export const Home = () => {
         )}
       </div>
 
-      {/* 4. Heritage Value Props Banner */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="bg-[#2A1B17] text-white p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
-          <div className="p-2 bg-[#3D2924] rounded-xl shrink-0">
-            <Award className="w-5 h-5 text-[#E0A96D]" />
-          </div>
-          <div>
-            <h4 className="font-bold text-sm leading-tight">100% Handmade</h4>
-            <p className="text-[10px] text-[#D7CCC8] mt-0.5 leading-tight">Authentic artisan crafted goods</p>
-          </div>
-        </div>
-
-        <div className="bg-[#C86D51] text-white p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
-          <div className="p-2 bg-[#b05c42] rounded-xl shrink-0">
-            <Truck className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h4 className="font-bold text-sm leading-tight">Safe Express Delivery</h4>
-            <p className="text-[10px] text-white/80 mt-0.5 leading-tight">Eco-friendly safe packaging</p>
-          </div>
-        </div>
-
-        <div className="bg-[#543831] text-white p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
-          <div className="p-2 bg-[#3D2924] rounded-xl shrink-0">
-            <ShieldCheck className="w-5 h-5 text-[#E0A96D]" />
-          </div>
-          <div>
-            <h4 className="font-bold text-sm leading-tight">Verified Artisans</h4>
-            <p className="text-[10px] text-[#D7CCC8] mt-0.5 leading-tight">Fair wages & direct support</p>
-          </div>
-        </div>
-
-        <div className="bg-[#2A1B17] text-white p-3.5 rounded-2xl flex items-center gap-3 shadow-sm">
-          <div className="p-2 bg-[#3D2924] rounded-xl shrink-0">
-            <HeartHandshake className="w-5 h-5 text-[#C86D51]" />
-          </div>
-          <div>
-            <h4 className="font-bold text-sm leading-tight">Sustainable Materials</h4>
-            <p className="text-[10px] text-[#D7CCC8] mt-0.5 leading-tight">Natural clay, wood & cotton</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
