@@ -10,9 +10,17 @@ export const Footer = () => {
           {/* Brand Info */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-[#C86D51]" />
+              <img 
+                src="/logo.png" 
+                alt="Vkonts & loops" 
+                className="w-6 h-6 rounded-full object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://ui-avatars.com/api/?name=V+L&background=C86D51&color=fff';
+                }}
+              />
               <h2 className="text-xl font-bold text-white font-serif tracking-tight">
-                Handmade<span className="text-[#C86D51]">Craft</span>
+                Vkonts <span className="text-[#C86D51]">& loops</span>
               </h2>
             </div>
             <p className="text-xs leading-relaxed mb-4 text-[#D7CCC8]/80">
@@ -74,7 +82,7 @@ export const Footer = () => {
         </div>
 
         <div className="pt-8 border-t border-[#3D2924] flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] text-[#D7CCC8]/60">
-          <p>&copy; {new Date().getFullYear()} HandmadeCraft Artisanal Studio. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Vkonts & loops handmade studio. All rights reserved.</p>
           <div className="flex gap-4">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

@@ -30,16 +30,22 @@ export const Header = () => {
         {/* Brand Logo */}
         <div 
           onClick={() => setActiveTab('home')}
-          className="flex items-center gap-1.5 sm:gap-2.5 cursor-pointer group shrink-0"
+          className="flex items-center gap-2 sm:gap-3 cursor-pointer group shrink-0"
         >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-[#2A1B17] text-[#E0A96D] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform shrink-0">
-            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="Vkonts & loops" 
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-md group-hover:scale-105 transition-transform shrink-0 border border-[#E8DFD8]"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://ui-avatars.com/api/?name=V+L&background=2A1B17&color=E0A96D';
+            }}
+          />
           <div className="hidden min-[375px]:block">
-            <h1 className="text-sm min-[400px]:text-base sm:text-xl font-bold text-[#2A1B17] tracking-tight leading-none font-serif">
-              Handmade<span className="text-[#C86D51]">Craft</span>
+            <h1 className="text-base min-[400px]:text-lg sm:text-xl font-bold text-[#2A1B17] tracking-tight leading-none font-serif">
+              Vkonts <span className="text-[#C86D51]">& loops</span>
             </h1>
-            <p className="hidden sm:block text-[10px] text-[#8C7A70] uppercase font-semibold tracking-wider mt-0.5">Artisanal Studio</p>
+            <p className="hidden sm:block text-[10px] text-[#8C7A70] uppercase font-semibold tracking-wider mt-0.5">handmade studio</p>
           </div>
         </div>
 
