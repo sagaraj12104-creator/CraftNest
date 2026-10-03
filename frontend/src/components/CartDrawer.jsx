@@ -78,7 +78,7 @@ export const CartDrawer = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-xs flex justify-end">
+    <div className="fixed inset-0 z-[60] overflow-hidden bg-black/60 backdrop-blur-xs flex justify-end">
       <div className="w-full max-w-md bg-[#FDFBF7] h-full flex flex-col shadow-2xl animate-fade-in">
         {/* Drawer Header */}
         <div className="p-4 bg-[#2A1B17] text-white flex items-center justify-between">

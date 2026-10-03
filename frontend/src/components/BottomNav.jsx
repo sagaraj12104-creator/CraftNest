@@ -21,8 +21,8 @@ export const BottomNav = () => {
   };
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-4 md:hidden pointer-events-none">
-      <nav className="bg-[#2A1B17] text-[#EFEBE9] rounded-full p-1.5 shadow-2xl border border-[#4A322C] inline-flex items-center justify-center gap-0.5 sm:gap-1 backdrop-blur-md bg-opacity-95 pointer-events-auto">
+    <div className="fixed bottom-4 left-0 right-0 z-40 flex justify-center px-4 md:hidden pointer-events-none">
+      <nav className="bg-[#2A1B17] text-[#EFEBE9] rounded-full p-1.5 shadow-2xl border border-[#4A322C] flex w-[95%] sm:w-[85%] max-w-sm items-center justify-around backdrop-blur-md bg-opacity-95 pointer-events-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
